@@ -1,0 +1,29 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: tcpserver-service
+spec:
+  selector:
+    app: tcpserver 
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port:  9090
+    targetPort: 9090
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: tcpserver
+  labels:
+     app: tcpserver 
+spec:
+  containers:
+    - name: tcpserver 
+      image: uhub.service.ucloud.cn/gary/tcpserver:0.3 
+      ports:
+      - containerPort: 9090
+        protocol: TCP
+  imagePullSecrets:
+    - name: garyuhub
+

@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dptcpclient
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dptcpclient
+  template:
+    metadata:
+      labels:
+        app: dptcpclient
+    spec:
+      containers:
+        - image:  uhub.service.ucloud.cn/gary/tcpclient:0.5
+          name: dptcpclient
+          ports:
+          - containerPort: 8083
+            protocol: TCP
+          env:
+            - name: SERVER_IP
+              value: "10.23.57.75"
+            - name: CLIENT_COUNT
+              value: "25000"
+            - name: SERVER_PORT
+              value: "9090"
+            - name: LOOP_COUNT
+              value: "20"
+            - name: CLIENT_INTERVAL
+              value: "59999"
+            - name: LENGTH
+              value: "4000"
+      imagePullSecrets:
+        - name: garyuhub

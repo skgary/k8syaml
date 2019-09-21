@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: zuulapigwdemo 
+  labels:
+     app: zuulapigwdemol 
+spec:
+  containers:
+    - name: zuulapigwcontainer
+      image: 10.23.138.165:8082/gary/gary-zuul-apigw:0.1
+      ports:
+      - containerPort:  9090
+        protocol: TCP
+  imagePullSecrets:
+    - name: garynexusin 

@@ -1,0 +1,53 @@
+# 创建一个可被外网访问的nginx应用
+kind: Service
+apiVersion: v1
+metadata:
+  name: zuul-service
+spec:
+  selector:
+    app: zuul 
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8084
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zuul-deployment
+  labels:
+    app: zuul 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zuul 
+  template:
+    metadata:
+      labels:
+        app: zuul
+    spec:
+      containers:
+      - name: zuuldepc 
+        image: 10.23.138.165:8082/gary/gary-zuul-apigw:0.4
+        ports:
+        - containerPort: 8084
+          protocol: TCP
+        volumeMounts:
+        - name: application-prop-vol
+          mountPath: /etc/config
+        - name: access-log
+          mountPath: /accesslog
+          subPath:  ${NODE_NAME}
+      volumes:
+        - name: application-prop-vol
+          configMap:
+            name: application-properties
+        - name: access-log 
+          hostPath:
+            path: /var/log/access
+            type: DirectoryOrCreate
+      imagePullSecrets:
+        - name: garynexusin
+

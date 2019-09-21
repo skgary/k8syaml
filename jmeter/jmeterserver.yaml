@@ -1,0 +1,67 @@
+apiVersion: apps/v1beta1
+kind: StatefulSet
+metadata:
+  name: jnode
+  labels:
+    app: jmeter
+    component: node
+spec:
+  serviceName: jfarm
+  replicas: 2
+  selector:
+    matchLabels:
+      app: jmeter
+      component: node
+  template:
+    metadata:
+      labels:
+        app: jmeter
+        component: node
+      annotations:
+        security.alpha.kubernetes.io/sysctls: net.ipv4.ip_local_port_range=10000 65000,net.ipv4.tcp_syncookies=1
+    spec:
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              topologyKey: kubernetes.io/hostname
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - jmeter
+                - key: component
+                  operator: In
+                  values:
+                  - node
+      restartPolicy: Always
+      containers:
+      - name: jmeter
+        image: dustise/jmeter-server
+        ports:
+        - name: server
+          containerPort: 1099
+        - name: rmi
+          containerPort: 20000
+        env:
+        - name: RMI_HOST
+          valueFrom:
+            fieldRef:
+              fieldPath: status.podIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jfarm
+  labels:
+    app: jmeter
+spec:
+  clusterIP: None
+  ports:
+  - port: 1099
+    name: server
+  selector:
+    app: jmeter
+    component: node

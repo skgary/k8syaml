@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: eureka-service-lb
+spec:
+  selector:
+    app: eureka 
+  type: LoadBalancer
+  ports:
+  - protocol: TCP
+    port:  8761
+    targetPort: 8761
+

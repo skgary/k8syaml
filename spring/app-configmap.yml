@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: application-properties 
+data:
+  provider.properties: |
+    server.port=8083
+    spring.application.name=springcloud-deep-provider
+    eureka.client.serviceUrl.defaultZone=http://10.223.210.121:8761/eureka/
+    eureka.instance.prefer-ip-address=true
+    spring.zipkin.base-url=http://10.223.155.97:9411
+    spring.sleuth.sampler.probability=1.0
+  consumer.properties: |
+    server.port=8082
+    spring.application.name=consumer
+    eureka.client.serviceUrl.defaultZone=http://10.223.210.121:8761/eureka/
+    eureka.instance.prefer-ip-address=true
+    spring.zipkin.base-url=http://10.223.155.97:9411
+    spring.sleuth.sampler.probability=1.0
+  zuul.properties: |
+    server.port=8084
+    eureka.client.serviceUrl.defaultZone=http://10.223.210.121:8761/eureka/
+    eureka.instance.prefer-ip-address=true
+    spring.application.name=api-gateway
+    zuul.routes.api-a.path=/api-a/**
+    zuul.routes.api-a.serviceId=hello-service
+    spring.zipkin.base-url=http://10.223.155.97:9411
+    spring.sleuth.sampler.probability=1.0
+    server.tomcat.accesslog.buffered=true
+    server.tomcat.accesslog.directory=/accesslog
+    server.tomcat.accesslog.enabled=true
+    server.tomcat.accesslog.pattern=combined
+    server.tomcat.accesslog.prefix=access_log
+    server.tomcat.accesslog.rename-on-rotate=false
+    server.tomcat.accesslog.request-attributes-enabled=false
+    server.tomcat.accesslog.rotate=true
+    server.tomcat.accesslog.suffix=.log

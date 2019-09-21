@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logstash-config
+  labels:
+    k8s-app: logstash
+data:
+  filebeat.yml: |-
+    filebeat.inputs:
+    - type: log
+      paths:
+        - /accesslog/*
+    output.elasticsearch:
+      hosts: ["10.23.247.155:9200","10.23.220.222:9200","10.23.161.165:9200"]
+      username: ${ELASTICSEARCH_USERNAME}
+      password: ${ELASTICSEARCH_PASSWORD}
+    setup.kibana:
+      host: "http://ues-fef9ea8c8ecdd9c15c58454451a2faf0.8200.ues.ucloud.cn"
+      username: ${ELASTICSEARCH_USERNAME}
+      password: ${ELASTICSEARCH_PASSWORD}
+

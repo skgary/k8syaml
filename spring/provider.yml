@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eurekaprovider 
+  labels:
+     app: eureka_provider_demo 
+spec:
+  containers:
+    - name: eurekaprovidercontainer
+      image: 10.23.138.165:8082/gary/gary-eureka-provider:0.2
+      ports:
+      - containerPort: 8083
+        protocol: TCP
+  imagePullSecrets:
+    - name: garynexusin 

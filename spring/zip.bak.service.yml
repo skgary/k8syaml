@@ -1,0 +1,43 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: zipkin-service
+spec:
+  selector:
+    app: zipkin 
+  type: ClusterIP
+  ports:
+  - protocol: TCP
+    port: 9411
+    targetPort: 9411
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: zipkin-deployment
+  labels:
+    app: zipkin 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: zipkin 
+  template:
+    metadata:
+      labels:
+        app: zipkin 
+    spec:
+      containers:
+      - name: zipkindepc 
+        image: openzipkin/zipkin
+        ports:
+        - containerPort: 9411
+          protocol: TCP
+        volumeMounts:
+        - name: application-prop-vol
+          mountPath: /etc/config
+      volumes:
+        - name: application-prop-vol
+          configMap:
+            name: application-properties
+

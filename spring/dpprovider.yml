@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dpprovider
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dpprovider
+  template:
+    metadata:
+      labels:
+        app: dpprovider
+    spec:
+      containers:
+        - image: 10.23.138.165:8082/gary/gary-eureka-provider:0.5
+          name: dpproviderc
+          ports:
+          - containerPort: 8083
+            protocol: TCP
+          volumeMounts:
+          - name: application-prop-vol
+            mountPath: /etc/config
+      volumes:
+        - name: application-prop-vol
+          configMap:
+            name: application-properties
+      imagePullSecrets:
+        - name: garynexusin

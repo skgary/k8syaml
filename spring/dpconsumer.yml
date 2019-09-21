@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dpconsumer
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dpconsumer
+  template:
+    metadata:
+      labels:
+        app: dpconsumer
+    spec:
+      containers:
+        - image: 10.23.138.165:8082/gary/gary-eureka-consumer:0.7
+          name: dpproviderc
+          ports:
+          - containerPort: 8083
+            protocol: TCP
+          volumeMounts:
+          - name: application-prop-vol
+            mountPath: /etc/config
+      volumes:
+        - name: application-prop-vol
+          configMap:
+            name: application-properties
+      imagePullSecrets:
+        - name: garynexusin
